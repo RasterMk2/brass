@@ -1,0 +1,71 @@
+script: import* (method | class)*
+
+import: "import" STRING
+	  | "import" STRING "as" NAME
+	  | "from" STRING "import" NAME
+	  | "from" STRING "import" NAME "as" NAME
+
+method: FULLNAME NAME "(" [parameters] ")" method_block
+
+method_block: "{" (statement | assignment)* "}"
+
+method_call: FULLNAME arguments
+
+
+class: "cls" NAME class_block
+	 | "cls" NAME "=>" class_block
+
+class_block: "{" assignment* method* "}"
+
+
+parameters: param ("," param)*
+		  | param ("," param)* ("," param_default)*
+		  | param_default ("," param_default)*
+
+param: FULLNAME NAME
+
+param_default: param "=" expr
+
+
+
+
+arguments: "(" expr*  ")"
+
+statement: method_call
+		 | assignment
+
+assignment: initialization "=" expr
+		  | initialization
+		  | FULLNAME "=" expr
+
+initialization: FULLNAME FULLNAME
+
+?expr: NUMBER
+	| STRING
+	| BOOL
+	| FULLNAME
+	| NAME
+	| statement
+	| sum
+
+?sum: product
+   | sum "+" product -> add
+   | sum "-" product -> sub
+
+?product: expr
+	   | product "*" expr -> mul
+	   | product "/" expr -> div
+
+FULLNAME: NAME ("." NAME)*
+
+BOOL: "true" | "false"
+
+%import common.ESCAPED_STRING -> STRING 
+%import common.NUMBER
+%import common.CNAME -> NAME
+%declare _INDENT _DEDENT
+%import common.WS_INLINE
+%ignore WS_INLINE
+%import common.NEWLINE -> _NL
+%ignore _NL
+%ignore "//" /[^\n]*/
