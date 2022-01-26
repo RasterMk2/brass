@@ -8,6 +8,9 @@ import click
 from pathlib import Path
 import logging
 import colorama
+import prettyprinter
+
+prettyprinter.install_extras(['attrs'])
 
 from typing import Optional
 
@@ -31,9 +34,10 @@ def main(inp: Path):
     with open(inp) as f:
         tokens = lexer.lex(f.read())
     
-    ast = parser.parse(tokens)    
+    #ast = parser.parse(tokens)    
+    prettyprinter.pprint(tokens)
     
-    print(tokens)
+    # print(tokens)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
-from brass.lexer.types import EOF
 from .nodes import BinOpNode, NumberNode
-from lexer import Number, Operator
-from handlers.errorhandler import ErrorHandler, Error, IllegalCharacterError
+from lexer import Number, Operator, EOF
+
 
 class AST:
     def __init__(self):

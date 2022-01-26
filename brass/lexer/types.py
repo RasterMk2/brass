@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 import attr
 import unicodedata as ucd
 from .tokens import NAMES

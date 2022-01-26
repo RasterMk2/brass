@@ -5,7 +5,7 @@ import: "import" STRING
 	  | "from" STRING "import" NAME
 	  | "from" STRING "import" NAME "as" NAME
 
-method: FULLNAME NAME "(" [parameters] ")" method_block
+method: FULLNAME FULLNAME "(" [parameters] ")" method_block
 
 method_block: "{" (statement | assignment)* "}"
 
@@ -29,7 +29,7 @@ param_default: param "=" expr
 
 
 
-arguments: "(" expr*  ")"
+arguments: "(" expr ("," expr)*  ")"
 
 statement: method_call
 		 | assignment
@@ -40,21 +40,27 @@ assignment: initialization "=" expr
 
 initialization: FULLNAME FULLNAME
 
-?expr: NUMBER
-	| STRING
-	| BOOL
-	| FULLNAME
-	| NAME
-	| statement
-	| sum
+?expr: method_call
+	 | sum
 
 ?sum: product
    | sum "+" product -> add
    | sum "-" product -> sub
+   
 
-?product: expr
-	   | product "*" expr -> mul
-	   | product "/" expr -> div
+?product: value
+	   | product "*" value -> mul
+	   | product "/" value -> div
+	   | "+" literal -> positive
+   	   | "-" literal -> negative
+
+?value: literal | method_call
+
+?literal: NUMBER
+		| STRING
+		| BOOL
+		| FULLNAME
+		| NAME
 
 FULLNAME: NAME ("." NAME)*
 
